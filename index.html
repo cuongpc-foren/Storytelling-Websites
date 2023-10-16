@@ -29,6 +29,19 @@
   </head>
 
   <body>
+    <!-- custom cursor -->
+    <div class="cursor"></div>
+
+    <!-- loading screen before section 1 -->
+    <div class="loader-overlay">
+      <div class="loader-content">
+        <p id="loading-text"></p>
+        <div id="progress-bar">
+          <div id="progress"></div>
+        </div>
+      </div>
+    </div>
+
     <!-- section one video introduction -->
     <section class="intro-sec">
       <div id="content-above">
@@ -42,9 +55,7 @@
                     href="index.html"
                     target="_blank"
                   >
-                    <p
-                      style="color: #fff; font-size: 30px; padding-left: 10px"
-                    >
+                    <p style="color: #fff; font-size: 30px; padding-left: 10px">
                       VIETNAM's FOOD |
                     </p>
                   </a>
@@ -140,8 +151,97 @@
       crossorigin="anonymous"
       referrerpolicy="no-referrer"
     ></script>
+
+    <script src="smooth-scroll.js"></script>
+
     <!-- your code javascript begin here -->
-    <script></script>
+
+    <script>
+      // speed scroll
+      // Tạo một đối tượng SmoothScroll với tùy chọn cấu hình
+      const scroll = new SmoothScroll('a[href*="#"]', {
+        speed: 100, // Tốc độ cuộn
+        offset: 80, // Độ tùy chỉnh offset (độ khoảng cách)
+      });
+    </script>
+
+    <script nonce="kWyjAp9hgp3o6pLnZrhpag==">
+      document.addEventListener("DOMContentLoaded", function () {
+        var loadingText = document.getElementById("loading-text");
+        var progressBar = document.getElementById("progress");
+        var welcomeText = "WELCOME TO VIET NAM";
+        var index = 0;
+        var progress = 0;
+
+        function showText() {
+          if (index < welcomeText.length) {
+            loadingText.textContent += welcomeText[index];
+            index++;
+          } else {
+            // Sau khi hiển thị xong, ẩn màn hình tải
+            var loaderOverlay = document.querySelector(".loader-overlay");
+            loaderOverlay.style.display = "none";
+          }
+
+          // Cập nhật thanh tiến trình
+          progress = ((index / welcomeText.length) * 100).toFixed(0);
+          progressBar.style.width = progress + "%";
+
+          setTimeout(showText, 200); // Thời gian hiển thị cho mỗi chữ (200 mili giây)
+        }
+
+        // Bắt đầu hiển thị từng chữ sau khi trang đã tải xong
+        showText();
+      });
+
+      // custom cursor code
+      document.addEventListener("mousemove", function (e) {
+        var cursor = document.querySelector(".cursor");
+        cursor.style.top = e.clientY + "px";
+        cursor.style.left = e.clientX + "px";
+      });
+
+      // scroll effect
+      document.addEventListener("DOMContentLoaded", function () {
+        // Lấy ra các phần tử cần thay đổi màu nền
+        var contentAbove = document.getElementById("content-above");
+
+        // Tạo biến để kiểm tra xem đã thay đổi màu chưa
+        var colorChanged = false;
+
+        // Tạo biến lưu màu nền gốc
+        var originalColor = "transparent";
+
+        // Thêm sự kiện lắng nghe cho việc cuộn trang
+        window.addEventListener("scroll", function () {
+          // Lấy vị trí cuộn hiện tại
+          var scrollPosition = window.scrollY;
+
+          // Lấy vị trí của phần location-sec
+          var locationSection = document.getElementById("location");
+          var locationSectionTop = locationSection.offsetTop;
+
+          // Kiểm tra nếu đã cuộn qua location-sec và chưa thay đổi màu
+          if (scrollPosition > locationSectionTop && !colorChanged) {
+            // Thay đổi màu nền của content-above
+            contentAbove.style.backgroundColor = "#007bff";
+
+            // Đánh dấu đã thay đổi màu
+            colorChanged = true;
+          }
+
+          // Kiểm tra nếu đã cuộn lên và đang ở lại intro-sec
+          if (scrollPosition < locationSectionTop && colorChanged) {
+            // Thay đổi màu nền của content-above trở lại màu gốc
+            contentAbove.style.backgroundColor = originalColor;
+
+            // Đánh dấu chưa thay đổi màu
+            colorChanged = false;
+          }
+        });
+      });
+    </script>
+
     <!-- ending your code here -->
   </body>
 </html>
